@@ -53,7 +53,7 @@ git push origin main
 ### Step 3: Go Live
 Wait 1-2 minutes, then visit:
 ```
-https://YOUR_USERNAME.github.io/perth_vegetation_map/
+https://caitlines.github.io/perth_vegetation_map/
 ```
 
 ## 🎨 Your Home Page Features

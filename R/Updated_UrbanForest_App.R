@@ -99,7 +99,6 @@ for (display_region in regions_to_generate) {
   
   if (nrow(missing_ranks) > 0) {
     cat("⚠️ Warning:", nrow(missing_ranks), "mesh blocks missing rankings\n")
-    cat("   This might indicate join key mismatch\n")
   } else {
     cat("✅ All mesh blocks successfully matched with rankings\n")
   }
@@ -176,6 +175,7 @@ canopy_pal <- colorNumeric(
   domain = c(0, 100)
 )
 
+## ADD this later
 # walking_comfort_pal <- colorFactor(palette = c("#a50026", "#d73027", "#fee08b", "#d9ef8b", "#66bd63", "#1a9850"))
 
 
@@ -507,10 +507,29 @@ addControl(
 ) %>%
   
   # =============================================================================
-# SET VIEW
+# SET VIEW - CENTER ON EACH REGION
 # =============================================================================
 
-setView(lng = 116.05, lat = -31.95, zoom = 11)
+# Define region-specific center coordinates
+region_coords <- list(
+  "Mandurah" = list(lng = 115.73, lat = -32.53, zoom = 11),
+  "Perth - Inner" = list(lng = 115.86, lat = -31.95, zoom = 12),
+  "Perth - North East" = list(lng = 115.95, lat = -31.80, zoom = 11),
+  "Perth - North West" = list(lng = 115.75, lat = -31.75, zoom = 11),
+  "Perth - South East" = list(lng = 116.05, lat = -32.05, zoom = 11),
+  "Perth - South West" = list(lng = 115.85, lat = -32.15, zoom = 11)
+)
+
+# Get coordinates for current region
+coords <- region_coords[[display_region]]
+if (!is.null(coords)) {
+  perth_veg_map <- perth_veg_map %>%
+    setView(lng = coords$lng, lat = coords$lat, zoom = coords$zoom)
+} else {
+  # Fallback to default if region not found
+  perth_veg_map <- perth_veg_map %>%
+    setView(lng = 116.05, lat = -31.95, zoom = 11)
+}
 
 # Display the map
 perth_veg_map
