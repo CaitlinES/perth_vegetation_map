@@ -36,58 +36,78 @@ perth_stats <- list(
 )
 
 # ==============================================================================
-# STEP 2: GET URBAN FOREST DATA FOR DISPLAY REGION ONLY
+# STEP 1.5: SETUP REGIONS AND SOURCE FUNCTIONS
 # ==============================================================================
 
 source("R/arcgis_rest_fetch.R")
 
-# Define which region to display
-display_region <- "Perth - South East"  # Change to NULL for all Perth,  although it's too large and crashes
+# Define which regions to display
+# Set to NULL to generate all regions, or specify a single region for testing
+regions_to_generate <- c(
+  "Mandurah",
+  "Perth - Inner",
+  "Perth - North East",
+  "Perth - North West",
+  "Perth - South East",
+  "Perth - South West"
+)
 
-# Load ONLY the region we want to display
-urban_forest_data <- get_urban_forest_data(bbox = display_region)
+# For testing, uncomment to generate just one region:
+# regions_to_generate <- "Perth - South East"
 
-
-# ==============================================================================
-# STEP 3: JOIN RANKINGS TO DISPLAY DATA
-# ==============================================================================
-
-cat("\n=== JOINING RANKINGS ===\n")
-
-# Join rankings using mb_moncat
-
-urban_forest_data <- urban_forest_data %>%
-  left_join(
-    rankings_lookup %>% 
-      select(mb_moncat,
-             # sa2_name21, 
-             # monitorcat, #monitorcat is LandType
-             # totalpcent,
-             # Canopy_Pct,
-             ##Adding on just the ranks/calcs
-             monitorcat_Count,  #Count of the type of LandType
-             monitorcat_canopy_rank, 
-             monitorcat_canopy_quintile,
-             All_canopy_rank, All_canopy_decile, 
-             Total_mesh_blocks),
-    by = c("mb_moncat")
-  )
-
-# Check for missing rankings
-missing_ranks <- urban_forest_data %>%
-  filter(is.na(All_canopy_rank))
-
-if (nrow(missing_ranks) > 0) {
-  cat("⚠️ Warning:", nrow(missing_ranks), "mesh blocks missing rankings\n")
-  cat("   This might indicate join key mismatch\n")
-} else {
-  cat("✅ All mesh blocks successfully matched with rankings\n")
+# Create output directory if it doesn't exist
+if (!dir.exists("docs/maps")) {
+  dir.create("docs/maps", showWarnings = FALSE)
 }
 
+# ==============================================================================
+# STEP 2: GENERATE MAPS FOR EACH REGION
+# ==============================================================================
 
-# ==============================================================================
-# STEP 4: CALCULATE VEGETATION RATINGS (on filtered data with rankings)
-# ==============================================================================
+for (display_region in regions_to_generate) {
+  
+  cat("\n" %+% strrep("=", 70) %+% "\n")
+  cat("GENERATING MAP FOR:", display_region, "\n")
+  cat(strrep("=", 70) %+% "\n")
+  
+  # Load ONLY the region we want to display
+  urban_forest_data <- get_urban_forest_data(bbox = display_region)
+  
+  # ==============================================================================
+  # JOIN RANKINGS TO DISPLAY DATA
+  # ==============================================================================
+  
+  cat("\n=== JOINING RANKINGS ===\n")
+  
+  # Join rankings using mb_moncat
+  
+  urban_forest_data <- urban_forest_data %>%
+    left_join(
+      rankings_lookup %>% 
+        select(mb_moncat,
+               monitorcat_Count,  #Count of the type of LandType
+               monitorcat_canopy_rank, 
+               monitorcat_canopy_quintile,
+               All_canopy_rank, All_canopy_decile, 
+               Total_mesh_blocks),
+      by = c("mb_moncat")
+    )
+  
+  # Check for missing rankings
+  missing_ranks <- urban_forest_data %>%
+    filter(is.na(All_canopy_rank))
+  
+  if (nrow(missing_ranks) > 0) {
+    cat("⚠️ Warning:", nrow(missing_ranks), "mesh blocks missing rankings\n")
+    cat("   This might indicate join key mismatch\n")
+  } else {
+    cat("✅ All mesh blocks successfully matched with rankings\n")
+  }
+  
+  
+  # ==============================================================================
+  # CALCULATE VEGETATION RATINGS (on filtered data with rankings)
+  # ==============================================================================
 
 cat("\n=== CALCULATING VEGETATION RATINGS ===\n")
 
@@ -499,7 +519,9 @@ perth_veg_map
 # SAVE THE MAP
 # ==============================================================================
 
-output_file <- "docs/index.html"
+# Create a filename-safe region name
+region_filename <- tolower(gsub(" - ", "_", gsub(" ", "_", display_region)))
+output_file <- paste0("docs/maps/", region_filename, ".html")
 
 saveWidget(perth_veg_map, output_file, selfcontained = TRUE)
 
@@ -512,17 +534,12 @@ if (! is.na(head_end)) {
   custom_style <- paste0(
     '  <!-- Custom Styling -->',
     '\n  <style>',
-    '\n    . leaflet-popup-content { padding: 10px ! important; }',
+    '\n    .leaflet-popup-content { padding: 10px !important; }',
     '\n    .leaflet-popup-content-wrapper { border-radius: 12px !important; }',
-    '\n    .info. legend { background:  white; padding: 10px; border-radius: 8px; }',
+    '\n    .info.legend { background: white; padding: 10px; border-radius: 8px; }',
     '\n  </style>',
     '\n  <script>',
     '\n    // Console info',
-    # sprintf('\n    console.log("Perth Vegetation Rating Map");'),
-    # sprintf('\n    console.log("Generated: %s");', format(current_datetime, "%Y-%m-%d %H:%M:%S")),
-    # sprintf('\n    console.log("Mesh blocks:  %s");', format(nrow(urban_forest_ratings), big.mark=",")),
-    # sprintf('\n    console.log("Avg vegetation score: %s");', round(mean(urban_forest_ratings$veg_score), 1)),
-    # sprintf('\n    console.log("Avg canopy: %s%%");', round(mean(urban_forest_ratings$Canopy_Pct), 1)),
     '\n  </script>'
   )
   
@@ -535,13 +552,10 @@ if (! is.na(head_end)) {
   writeLines(html_content, output_file)
 }
 
-##Vegetation: Urban Forest Mesh Blocks - 2024 (DPLH-109)
-##MEtadata https://catalogue.data.wa.gov.au/dataset/urban-forest-mesh-blocks-2024-dplh-109/resource/ac6a580c-f98b-4936-8483-4a37e88bb45a
-# In R, check file sizes
-# files <- list.files("data/processed", full.names = TRUE, recursive = TRUE)
-# sizes <- file.info(files)$size / 1024^2  # Convert to MB
+cat("✅ Map saved to:", output_file, "\n")
 
-# data.frame(
-#   file = basename(files),
-#   size_mb = round(sizes, 2)
-# )
+} # End of region loop
+
+cat("\n" %+% strrep("=", 70) %+% "\n")
+cat("ALL MAPS GENERATED SUCCESSFULLY!\n")
+cat(strrep("=", 70) %+% "\n")
