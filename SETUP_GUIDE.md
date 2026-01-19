@@ -102,37 +102,7 @@ The project is configured to use GitHub Pages with the `docs` folder as the sour
 - **htmlwidgets**: R to HTML conversion
 - **HTML/CSS**: Home page styling
 
-## Customization
-
-### Changing Region Names or Colors
-
-Edit `docs/index.html` and modify:
-- `.map-card-header` colors (e.g., `.inner`, `.northeast`)
-- Region descriptions in each card
-- Icons and styling
-
-### Adjusting Home Page Layout
-
-The home page uses CSS Grid and is fully responsive. Edit the `<style>` section in `docs/index.html`.
-
-## Troubleshooting
-
-**Q: Maps don't load on GitHub Pages**
-- Ensure `docs` folder is pushed to GitHub
-- Check GitHub Pages settings point to `/docs` folder
-- Wait 1-2 minutes for GitHub Pages to rebuild
-
-**Q: File sizes too large**
-- Use `selfcontained = FALSE` in R script for non-embedded maps
-- Consider compressing HTML files with gzip
-- Split particularly large regions into sub-regions
-
-**Q: Maps take too long to generate**
-- Generate regions one at a time for testing
-- Ensure you have sufficient RAM (each map needs ~500 MB+)
-- Consider using `streamlined = TRUE` option in leaflet map creation
-
-## Future Enhancements
+## Customisation
 
 - [ ] Add comparison mode between regions
 - [ ] Add time-series analysis
@@ -146,5 +116,4 @@ Data sourced from Western Australia Government. See [DPLH-109 Dataset](https://c
 
 ---
 
-**Created**: January 2024  
-**Last Updated**: January 2026
+**App Last Updated**: January 2026

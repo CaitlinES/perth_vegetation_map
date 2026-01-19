@@ -66,9 +66,9 @@ if (!dir.exists("docs/maps")) {
 
 for (display_region in regions_to_generate) {
   
-  cat("\n" %+% strrep("=", 70) %+% "\n")
+  # cat("\n" %+% strrep("=", 70) %+% "\n")
   cat("GENERATING MAP FOR:", display_region, "\n")
-  cat(strrep("=", 70) %+% "\n")
+  # cat(strrep("=", 70) %+% "\n")
   
   # Load ONLY the region we want to display
   urban_forest_data <- get_urban_forest_data(bbox = display_region)
@@ -556,6 +556,6 @@ cat("✅ Map saved to:", output_file, "\n")
 
 } # End of region loop
 
-cat("\n" %+% strrep("=", 70) %+% "\n")
+# cat("\n" %+% strrep("=", 70) %+% "\n")
 cat("ALL MAPS GENERATED SUCCESSFULLY!\n")
-cat(strrep("=", 70) %+% "\n")
+# cat(strrep("=", 70) %+% "\n")

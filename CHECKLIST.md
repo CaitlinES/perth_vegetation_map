@@ -12,11 +12,11 @@
 ## 🚀 What You Need To Do
 
 ### Phase 1: Generate Maps (One-time setup)
-- [ ] Open RStudio or R console
-- [ ] Set working directory: `setwd("d:/Fun_Scripts/perth_vegetation_map")`
-- [ ] Run the script: `source("R/Updated_UrbanForest_App.R")`
-- [ ] Wait 10-20 minutes for generation
-- [ ] Verify maps created in `docs/maps/` folder
+- [x ] Open RStudio or R console
+- [x ] Set working directory: `setwd("d:/Fun_Scripts/perth_vegetation_map")`
+- [x ] Run the script: `source("R/Updated_UrbanForest_App.R")`
+- [x ] Wait 10-20 minutes for generation
+- [x ] Verify maps created in `docs/maps/` folder
 
 ### Phase 2: Push to GitHub
 - [ ] Open PowerShell or terminal
@@ -27,14 +27,9 @@
 
 ### Phase 3: Verify on GitHub Pages
 - [ ] Wait 1-2 minutes for GitHub Pages to build
-- [ ] Visit: `https://YOUR_USERNAME.github.io/perth_vegetation_map/`
+- [ ] Visit: `https://caitlines.github.io/perth_vegetation_map/`
 - [ ] Verify home page loads with 6 region cards
 - [ ] Click each region button to verify map links work
-
-### Phase 4: Share & Celebrate 🎉
-- [ ] Copy your home page URL
-- [ ] Share with friends, colleagues, or on social media
-- [ ] Get feedback on the visualizations
 
 ## 📝 Optional Customizations
 

@@ -9,6 +9,12 @@
 data/raw/*.gdb/
 data/raw/*.gdb
 R/Summary_Statistics.R
+IMPLEMENTATION_SUMMARY.txt
+CHECKLIST.md
+QUICK_START.md
+README_SETUP.md
+SETUP_GUIDE.md
+START_HERE.md
 
 # Temporary files
 *.tmp
@@ -17,3 +23,5 @@ R/Summary_Statistics.R
 # OS
 .DS_Store
 Thumbs.db
+
+
