@@ -188,20 +188,20 @@ worst_canopy_areas <- rankings_lookup_SA2 %>%
   head(5)
 
 # Create the map
-perth_veg_map <- leaflet() %>%
+perth_veg_map <- leaflet(data = urban_forest_ratings) %>%
   
 # =============================================================================
 # BASE MAPS
 # =============================================================================
 
-addProviderTiles(providers$Esri.WorldImagery, group = "Satellite") %>%
+  addProviderTiles("Esri.WorldImagery", group = "Satellite") %>%
   
 # =============================================================================
 # Canopy and Vegetation (PRIMARY)
 # =============================================================================
 
-addPolygons(
-  data = urban_forest_ratings,
+ addPolygons(
+  # data = urban_forest_ratings,
   fillColor = ~canopy_pal(Canopy_Pct),
   fillOpacity = 0.7,
   stroke = TRUE,
@@ -504,7 +504,7 @@ addControl(
     "</div>"
   ),
   position = "topright"
-) %>%
+) 
   
   # =============================================================================
 # SET VIEW - CENTER ON EACH REGION
@@ -532,7 +532,7 @@ if (!is.null(coords)) {
 }
 
 # Display the map
-perth_veg_map
+# perth_veg_map
 
 # ==============================================================================
 # SAVE THE MAP
@@ -575,6 +575,4 @@ cat("✅ Map saved to:", output_file, "\n")
 
 } # End of region loop
 
-# cat("\n" %+% strrep("=", 70) %+% "\n")
 cat("ALL MAPS GENERATED SUCCESSFULLY!\n")
-# cat(strrep("=", 70) %+% "\n")
