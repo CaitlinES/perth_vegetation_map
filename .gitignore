@@ -1,0 +1,19 @@
+# R
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+*.Rproj
+
+# Data raw
+data/raw/*.gdb/
+data/raw/*.gdb
+R/Summary_Statistics.R
+
+# Temporary files
+*.tmp
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
